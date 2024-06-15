@@ -1,0 +1,203 @@
+using System;
+
+namespace Alg
+{
+    class Program
+    {
+        /*------------Прості числа------------*/
+
+        //static bool IsPrime(int n)
+        //{
+        //    if (n <= 1) return false;
+        //    for (int i = 2; i * i <= n; i++)
+        //    {
+        //        if (n % i == 0) return false;
+        //    }
+        //    return true;
+        //}
+        //static int nearestPrimeNumber(int n)
+        //{
+        //    for (int i = 1; i < n; i++)
+        //    {
+        //        if (IsPrime(n + i)) return n + i;
+        //        else if (IsPrime(n - i)) return n - i;
+        //    }
+        //    return 2;
+        //}
+        //static void Main(string[] args)
+        //{
+        //    Console.Write("Введіть число: ");
+        //    int n = int.Parse(Console.ReadLine());
+        //    Console.WriteLine($"Найближче просте число: {nearestPrimeNumber(n)}");
+        //}
+
+        /*-----------Сортування-----------*/
+
+        //static void PrintMas(int[] arr)
+        //{
+        //    for (int i = 0; i < arr.Length; i++) Console.Write(arr[i] + " ");
+        //}
+        //static void MakeItOriginal(int[] arr)
+        //{
+        //    int[] arrOrig = { 1, 7, 3, 9, 3, 8, 3, 3, 8, 1, 0, 3, 7 };
+        //    for (int i = 0; i < arr.Length; i++) arr[i] = arrOrig[i];
+        //}
+        //static void BubbleSort(int[] arr)
+        //{
+        //    int n = arr.Length, temp = 0;
+
+        //    for (int i = 1; i < n; i++)
+        //    {
+        //        for (int j = 0; j < n - i; j++)
+        //        {
+        //            if (arr[j] > arr[j + 1])
+        //            {
+        //                temp = arr[j];
+        //                arr[j] = arr[j + 1];
+        //                arr[j + 1] = temp;
+        //            }
+        //        }
+        //    }
+        //}
+        //static void SelectionSort(int[] arr)
+        //{
+        //    int n = arr.Length;
+
+        //    for (int i = 0; i < n - 1; i++)
+        //    {
+        //        int nmin = i;
+        //        for (int j = i + 1; j < n; j++)
+        //        {
+        //            if (arr[j] < arr[nmin])
+        //            {
+        //                nmin = j;
+        //            }
+        //        }
+        //        int temp = arr[i];
+        //        arr[i] = arr[nmin];
+        //        arr[nmin] = temp;
+        //    }
+        //}
+        //static void InsertionSort(int[] arr)
+        //{
+        //    int n = arr.Length;
+
+        //    for (int i = 1; i < n; i++)
+        //    {
+        //        int c = arr[i];
+
+        //        int j;
+        //        for (j = i - 1; j >= 0 && arr[j] > c; j--)
+        //        {
+        //            arr[j + 1] = arr[j];
+        //        }
+        //        arr[j + 1] = c;
+        //    }
+        //}
+        //static void Main(string[] args)
+        //{
+        //    int[] arr = new int[13];
+        //    MakeItOriginal(arr);
+        //    PrintMas(arr);
+
+        //    Console.WriteLine();
+
+        //    SelectionSort(arr);
+        //    Console.WriteLine();
+        //    PrintMas(arr);
+        //}
+
+        /*----------Графи-------------*/
+        static int[] Dijkstra(int[,] mas, int start)
+        {
+            start--;
+            int n = mas.GetLength(0);
+            int[] dist = new int[n];
+            int[] parent = new int[n];
+            bool[] processed = new bool[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                dist[i] = int.MaxValue;
+            }
+            dist[start] = 0;
+            int cur = start;
+            parent[start] = start;
+
+            while (!processed[cur])
+            {
+                processed[cur] = true;
+                for (int i = 0; i < n; i++)
+                {
+                    if (mas[cur, i] != 0)
+                    {
+                        int d = dist[cur] + mas[cur, i];
+                        if (d < dist[i])
+                        {
+                            dist[i] = d;
+                            parent[i] = cur;
+                        }
+                    }
+                }
+                int minDist = int.MaxValue;
+                for (int i = 0; i < n; i++)
+                {
+                    if (!processed[i] && dist[i] < minDist)
+                    {
+                        cur = i;
+                        minDist = dist[i];
+                    }
+                }
+            }
+            return dist;
+        }
+
+        public static int[,] FloydWarshall(int[,] mas)
+        {
+            int verticesCount = mas.GetLength(0);
+            int[,] distance = new int[verticesCount, verticesCount];
+
+            for (int i = 0; i < verticesCount; i++)
+            {
+                for (int j = 0; j < verticesCount; j++) distance[i, j] = Dijkstra(mas, i + 1)[j];
+            }
+            return distance;
+        }
+
+        static void PrintMatrix(int[,] matrix)
+        {
+            int n = matrix.GetLength(0);
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    Console.Write(matrix[i, j] == int.MaxValue ? "INF" : matrix[i, j].ToString());
+                    Console.Write("\t");
+                }
+                Console.WriteLine();
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            int[,] graph = {
+            { 0, 3, 0, 0, 0, 0 },
+            { 3, 0, 1, 0, 0, 0 },
+            { 0, 1, 0, 7, 0, 2 },
+            { 0, 0, 7, 0, 2, 3 },
+            { 0, 0, 0, 2, 0, 4 },
+            { 0, 0, 2, 3, 4, 0 }};
+
+            Console.WriteLine("Алгоритм Дейкстры:");
+            int[] distancesFromStart = Dijkstra(graph, 1);
+            for (int i = 0; i < distancesFromStart.Length; i++)
+            {
+                Console.WriteLine($"Расстояние от вершины 1 до вершины {i + 1}: {distancesFromStart[i]}");
+            }
+
+            Console.WriteLine("\nАлгоритм Флойда-Уоршелла:");
+            int[,] allPairsShortestPaths = FloydWarshall(graph);
+            PrintMatrix(allPairsShortestPaths);
+        }
+    }
+}
