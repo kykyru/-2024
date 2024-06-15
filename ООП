@@ -1,0 +1,240 @@
+using System;
+using System.Collections.Generic; 
+
+namespace OOP
+{
+    class Program
+    {
+        //class Car
+        //{
+        //    string name;
+        //    int speed;
+
+        //    public Car(string name, int speed)
+        //    {
+        //        this.name = name;
+        //        this.speed = speed;
+        //    }
+
+        //    public static Car Fastest(Car car1, Car car2)
+        //    {
+        //        if (car1.speed > car2.speed) return car1;
+        //        else return car2;
+        //    }
+
+        //    static public void Print(Car car)
+        //    {
+
+        //        Console.WriteLine($"Name: {car.name}\tSpeed: {car.speed}");
+        //    }
+        //}
+        //static void Main(string[] args)
+        //{
+        //    Car car1 = new Car("toyota", 250);
+        //    Car car2 = new Car("GM", 200);
+        //    Car.Print(Car.Fastest(car1, car2));
+        //}
+
+        /*---------------------Парадигми-----------------------*/
+
+        class Automobile
+        {
+            protected int speed;
+            protected string name;
+            public Automobile(int userspeed, string usersname)
+            {
+                if (userspeed > 0) speed = userspeed;
+                else Console.WriteLine("Некоректна швидкісить");
+                name = usersname;
+            }
+
+            public Automobile Compare(Automobile another)
+            {
+                if (this.speed > another.speed) return this;
+                else return another;
+            }
+
+            public virtual void Print()
+            {
+                Console.WriteLine($"Назва: {name}\t\tШвидкість: {speed}");
+            }
+        }
+
+        class Car : Automobile
+        {
+            private int nPassengerSeats;
+            public Car(int speed, string name, int nPassengerSeats) : base(speed, name)
+            {
+                if (nPassengerSeats < 0)
+                {
+                    Console.WriteLine("Некоректна кількість місць");
+                    nPassengerSeats = 0;
+                }
+                else this.nPassengerSeats = nPassengerSeats;
+            }
+            public override void Print()
+            {
+                Console.WriteLine($"Назва: {name}\t\tШвидкість: {speed} км/г\t\tКількість місць: {nPassengerSeats}");
+            }
+        }
+        class Vehicle : Automobile
+        {
+            private int MaxLuggageWeight;
+            public Vehicle(int speed, string name, int MaxLuggageWeight) : base(speed, name)
+            {
+                if (MaxLuggageWeight < 0)
+                {
+                    Console.WriteLine("Некоректна вага");
+                    MaxLuggageWeight = 0;
+                }
+                else this.MaxLuggageWeight = MaxLuggageWeight;
+            }
+            public override void Print()
+            {
+                Console.WriteLine($"Назва: {name}\t\tШвидкість: {speed}\t\tМаксимальна вага багажу: {MaxLuggageWeight} кг");
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            Automobile[] mas = { new Car(250, "Toyota", 4), new Vehicle(20, "Volvo", 3000) };
+            mas[0].Compare(mas[1]).Print();
+        }
+
+        /*----------------------Колекції та ситуації--------------------------*/
+
+        //class Automobile
+        //{
+        //    private int speed;
+        //    private string name;
+
+        //    public int Speed
+        //    {
+        //        get
+        //        {
+        //            return speed;
+        //        }
+        //        set
+        //        {
+        //            if (value > 0) speed = value;
+        //        }
+        //    }
+        //    public string Name
+        //    {
+        //        get
+        //        {
+        //            return name;
+        //        }
+        //        set
+        //        {
+        //            name = value;
+        //        }
+        //    }
+
+        //    public Automobile()
+        //    {
+        //        speed = 0;
+        //        name = "noname";
+        //    }
+        //    public Automobile(int userspeed, string usersname)
+        //    {
+        //        if (userspeed > 0) speed = userspeed;
+        //        name = usersname;
+        //    }
+        //    public Automobile Compare(Automobile another)
+        //    {
+        //        if (this.speed > another.speed) return this;
+        //        else return another;
+        //    }
+        //    public void Print()
+        //    {
+        //        Console.WriteLine($"Назва: {name}\t\tШвидкість: {speed}");
+        //    }
+
+        //    static void Main(string[] args)
+        //    {
+        //        int speed;
+        //        string name;
+        //        Automobile faster = new Automobile();
+
+        //        List<Automobile> automobiles = new List<Automobile>();
+
+        //        try
+        //        {
+        //            for (int i = 0; i < 3; i++)
+        //            {
+        //                Console.Write("Введіть швидкість: ");
+        //                speed = Convert.ToInt32(Console.ReadLine());
+        //                if (speed < 0 || speed > 300)
+        //                {
+        //                    string s = "Некоректне значення швидкості. Нормальне: 0 - 300 км/г";
+        //                    throw new Exception(s);
+        //                }
+
+        //                Console.Write("Введіть ім'я: ");
+        //                name = Console.ReadLine();
+
+        //                automobiles.Add(new Automobile(speed, name));
+        //                Console.WriteLine("\n\n");
+        //            }
+        //            foreach (Automobile i in automobiles)
+        //            {
+        //                i.Print();
+        //                faster = i.Compare(i);
+        //            }
+        //            Console.WriteLine($"\n\nНайшвидший автомобіль: {faster.Name}");
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Console.WriteLine($"Помилка: {e.Message}");
+        //        }
+        //    }
+        //}
+
+        /*-------------------Абстракція-----------------------*/
+
+        //abstract class Planet
+        //{
+        //    public abstract void ReportAboutMovement();
+
+        //    public abstract void ReportAboutLife();
+        //}
+
+        //class Earh : Planet
+        //{
+        //    public override void ReportAboutMovement()
+        //    {
+        //        Console.WriteLine("Земля рухається навколо зірки Сонце");
+        //    }
+
+        //    public override void ReportAboutLife()
+        //    {
+        //        Console.WriteLine("Земля має життя");
+        //    }
+        //}
+
+        //class Moon : Planet
+        //{
+        //    public override void ReportAboutMovement()
+        //    {
+        //        Console.WriteLine("Місяць рухається навколо планети Земля");
+        //    }
+
+        //    public override void ReportAboutLife()
+        //    {
+        //        Console.WriteLine("Місяць не має життя");
+        //    }
+        //}
+
+        //static void Main(String[] args)
+        //{
+        //    Planet[] space_object = { new Earh(), new Moon() };
+
+        //    foreach (var i in space_object)
+        //    {
+        //        i.ReportAboutMovement();
+        //        i.ReportAboutLife();
+        //    }
+        //}
+    }
+}
